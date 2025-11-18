@@ -1,0 +1,46 @@
+resources:
+  jobs:
+    ETL_Olist_Bronze_Silver_Gold:
+      name: ETL Olist - Bronze Silver Gold
+      schedule:
+        quartz_cron_expression: 39 0 13 * * ?
+        timezone_id: America/Sao_Paulo
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: 1_ingestao_bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/ocimarschroederjr@gmail.com/RocketLabDados-2025.2/Atividade02
+              - Arquitetura Medalhão/Atividade2_land_to_bronze.ipynb
+            source: WORKSPACE
+        - task_key: 2_conversao_silver
+          depends_on:
+            - task_key: 1_ingestao_bronze
+          notebook_task:
+            notebook_path: /Workspace/Users/ocimarschroederjr@gmail.com/RocketLabDados-2025.2/Atividade02
+              - Arquitetura Medalhão/Atividade2_bronze_to_silver.ipynb
+            source: WORKSPACE
+        - task_key: 3a_gold_projeto1
+          depends_on:
+            - task_key: 2_conversao_silver
+          notebook_task:
+            notebook_path: /Workspace/Users/ocimarschroederjr@gmail.com/RocketLabDados-2025.2/Atividade03-
+              Arquitetura Medalhão/projeto1_gold_layer
+            source: WORKSPACE
+        - task_key: 3b_gold_projeto2
+          depends_on:
+            - task_key: 2_conversao_silver
+          notebook_task:
+            notebook_path: /Workspace/Users/ocimarschroederjr@gmail.com/RocketLabDados-2025.2/Atividade03-
+              Arquitetura Medalhão/projeto2_gold_layer
+            source: WORKSPACE
+        - task_key: 3c_gold_projeto3
+          depends_on:
+            - task_key: 2_conversao_silver
+          notebook_task:
+            notebook_path: /Workspace/Users/ocimarschroederjr@gmail.com/RocketLabDados-2025.2/Atividade03-
+              Arquitetura Medalhão/projeto3_gold_layer
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
+
